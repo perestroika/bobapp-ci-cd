@@ -1,0 +1,17 @@
+name: first action
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    steps:
+      - name: récupérer le code
+        uses: actions/checkout@v6
+      - name: confirmer le lancement
+        run: echo "it works!"
