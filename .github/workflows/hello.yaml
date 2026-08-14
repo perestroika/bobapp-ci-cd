@@ -15,3 +15,5 @@ jobs:
         uses: actions/checkout@v6
       - name: confirmer le lancement
         run: echo "it works!"
+      - name: Démonstration du blocage
+        run: exit 1
