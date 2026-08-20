@@ -1,7 +1,7 @@
 package com.openclassrooms.bobapp;
 
 // import méthode JUnit
-//import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +12,7 @@ class BobappApplicationTests {
 	@Test
 	void contextLoads() {
 	    //provoque un échec
-	    //fail("Échec volontaire");
+	    fail("Échec volontaire");
 	}
 
 }
