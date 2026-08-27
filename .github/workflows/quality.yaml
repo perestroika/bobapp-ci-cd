@@ -1,0 +1,65 @@
+name: Qualité
+
+on:
+  workflow_call:
+    secrets:
+      SONAR_TOKEN:
+        required: true
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: Générer les rapports
+    uses: ./.github/workflows/tests.yaml
+
+  analysis:
+    name: SonarQube - Quality Gate
+    needs: tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupérer tout l'historique Git
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Télécharger les sorties back
+        uses: actions/download-artifact@v8
+        with:
+          name: back-test-and-coverage
+          path: back/target
+
+      - name: Télécharger la couverture front
+        uses: actions/download-artifact@v8
+        with:
+          name: front-coverage
+          path: front/coverage/bobapp
+
+      - name: Configurer Java 11 pour l'analyse
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "11"
+          cache: maven
+
+      - name: Préparer les bibliothèques Java pour Sonar
+        working-directory: back
+        run: >
+          mvn -B dependency:copy-dependencies
+          -DincludeScope=test
+          -DoutputDirectory=target/dependency
+
+      - name: Vérifier les rapports attendus
+        run: |
+          test -f back/target/site/jacoco/jacoco.xml
+          test -f front/coverage/bobapp/lcov.info
+          test -d back/target/classes
+          test -d back/target/dependency
+
+      - name: Analyser avec SonarQube Cloud
+        uses: SonarSource/sonarqube-scan-action@v8.1.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
