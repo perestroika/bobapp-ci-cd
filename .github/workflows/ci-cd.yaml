@@ -16,6 +16,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  tests:
-    name: Tests FRONT & BACK
-    uses: ./.github/workflows/tests.yaml
+  quality:
+    name: Tests & qualité
+    uses: ./.github/workflows/quality.yaml
+    secrets: inherit
