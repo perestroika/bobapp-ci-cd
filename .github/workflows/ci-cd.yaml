@@ -20,3 +20,9 @@ jobs:
     name: Tests & qualité
     uses: ./.github/workflows/quality.yaml
     secrets: inherit
+
+  docker:
+    name: Construction & publication Docker
+    needs: quality
+    uses: ./.github/workflows/docker.yaml
+    secrets: inherit

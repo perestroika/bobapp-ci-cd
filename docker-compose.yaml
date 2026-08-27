@@ -1,0 +1,18 @@
+name: bobapp
+
+services:
+  back:
+    build:
+      context: ./back
+    image: bobapp-back:local
+    ports:
+      - "8080:8080"
+
+  front:
+    build:
+      context: ./front
+    image: bobapp-front:local
+    depends_on:
+      - back
+    ports:
+      - "8081:80"
