@@ -38,11 +38,26 @@ jobs:
           name: front-coverage
           path: front/coverage/bobapp
 
+      - name: Configurer Java 11 pour l'analyse
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "11"
+          cache: maven
+
+      - name: Préparer les bibliothèques Java pour Sonar
+        working-directory: back
+        run: >
+          mvn -B dependency:copy-dependencies
+          -DincludeScope=test
+          -DoutputDirectory=target/dependency
+
       - name: Vérifier les rapports attendus
         run: |
           test -f back/target/site/jacoco/jacoco.xml
           test -f front/coverage/bobapp/lcov.info
           test -d back/target/classes
+          test -d back/target/dependency
 
       - name: Analyser avec SonarQube Cloud
         uses: SonarSource/sonarqube-scan-action@v8.1.0
